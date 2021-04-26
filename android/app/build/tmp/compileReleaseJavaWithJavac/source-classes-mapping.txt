@@ -1,0 +1,9 @@
+com/coacherapp/MainActivity.java
+ com.coacherapp.MainActivity
+com/coacherapp/BuildConfig.java
+ com.coacherapp.BuildConfig
+com/coacherapp/MainApplication.java
+ com.coacherapp.MainApplication
+ com.coacherapp.MainApplication$1
+com/facebook/react/PackageList.java
+ com.facebook.react.PackageList

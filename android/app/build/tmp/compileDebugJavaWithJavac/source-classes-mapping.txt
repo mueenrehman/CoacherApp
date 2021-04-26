@@ -1,0 +1,14 @@
+com/athleteapp/MainActivity.java
+ com.coacherapp.MainActivity
+com/athleteapp/MainApplication.java
+ com.coacherapp.MainApplication
+ com.coacherapp.MainApplication$1
+com/coacherapp/BuildConfig.java
+ com.coacherapp.BuildConfig
+com/athleteapp/ReactNativeFlipper.java
+ com.coacherapp.ReactNativeFlipper
+ com.coacherapp.ReactNativeFlipper$1
+ com.coacherapp.ReactNativeFlipper$2
+ com.coacherapp.ReactNativeFlipper$2$1
+com/facebook/react/PackageList.java
+ com.facebook.react.PackageList

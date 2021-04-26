@@ -1,0 +1,6 @@
+module Pods_CoacherApp_coacherappTests {
+  umbrella header "Pods-CoacherApp-coacherappTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
