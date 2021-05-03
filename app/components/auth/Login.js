@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -15,37 +15,37 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
-} from 'react-native';
-import {Colors} from '../../style/colors';
-import {Container, Header, Content, Tab, Tabs} from 'native-base';
-import Input from '../../common/Input';
-import {FontFamily} from '../../style/typograpy';
-import Button from '../../common/Button';
-import {useKeyboard} from './../index';
+} from "react-native";
+import { Colors } from "../../style/colors";
+import { Container, Header, Content, Tab, Tabs } from "native-base";
+import Input from "../../common/Input";
+import { FontFamily } from "../../style/typograpy";
+import Button from "../../common/Button";
+import { useKeyboard } from "./../index";
 
-import {TextInputMask} from 'react-native-masked-text';
+import { TextInputMask } from "react-native-masked-text";
 
-import NetInfo from '@react-native-community/netinfo';
-import {coachRegister} from '../../../services/registerCoach';
+import NetInfo from "@react-native-community/netinfo";
+import { coachRegister } from "../../../services/registerCoach";
 
-const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
-var keyheight = '';
+const screenWidth = Dimensions.get("window").width;
+const screenHeight = Dimensions.get("window").height;
+var keyheight = "";
 
-const SplashScreen = props => {
+const SplashScreen = (props) => {
   const [state, setState] = useState({
-    email: '',
+    email: "",
   });
 
-  const [first_name, setFirstname] = useState('');
-  const [last_name, setLastname] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [phone, setPhone] = useState('');
-  const [address, setAddress] = useState('');
-  const [dob, setDob] = useState('');
-  const [country, setCountry] = useState('');
-  const [role, setRole] = useState('');
+  const [first_name, setFirstname] = useState("");
+  const [last_name, setLastname] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [dob, setDob] = useState("");
+  const [country, setCountry] = useState("");
+  const [role, setRole] = useState("");
 
   const [checkFirst_name, setCheckFirstname] = useState(false);
   const [checkLast_name, setCheckLastname] = useState(false);
@@ -59,38 +59,33 @@ const SplashScreen = props => {
   const [checkRole, setCheckRole] = useState(false);
 
   _onHandleChange = (name, value) => {
-    if (name == 'first_name') {
+    if (name == "first_name") {
       setCheckFirstname(false);
       setFirstname(value);
-    } else if (name == 'last_name') {
+    } else if (name == "last_name") {
       setCheckLastname(false);
       setLastname(value);
-    } else if (name == 'email') {
+    } else if (name == "email") {
       setCheckEmail(false);
       setState({
         email: value,
       });
-    } else if (name == 'password') {
+    } else if (name == "password") {
       setCheckPassword(false);
       setPassword(value);
-    }
-    // else if (name == 'confirmPassword') {
-    //   setCheckConfirmPassword(false);
-    //   setConfirmPassword(value);
-    // }
-    else if (name == 'phone') {
+    } else if (name == "phone") {
       setCheckPhone(false);
       setPhone(value);
-    } else if (name == 'address') {
+    } else if (name == "address") {
       setCheckAddress(false);
       setAddress(value);
-    } else if (name == 'dob') {
+    } else if (name == "dob") {
       setCheckDob(false);
       setDob(value);
-    } else if (name == 'country') {
+    } else if (name == "country") {
       setCheckCountry(false);
       setCountry(value);
-    } else if (name == 'role') {
+    } else if (name == "role") {
       setCheckRole(false);
       setRole(value);
     }
@@ -100,11 +95,9 @@ const SplashScreen = props => {
     try {
       let state = await NetInfo.fetch();
       if (state.isConnected == true) {
-        // call your function here
         checkValidations();
-        // getCoachDetails();
       } else {
-        alert('Please check your internet connection and try again');
+        alert("Please check your internet connection and try again");
       }
     } catch (error) {
       console.log(error);
@@ -113,60 +106,37 @@ const SplashScreen = props => {
   };
 
   const checkValidations = () => {
-    // let validation = true;
-
-    if (first_name == '') {
-      // validation = false;
+    if (first_name == "") {
       setCheckFirstname(true);
-    } else if (last_name == '') {
-      // validation = false;
+    } else if (last_name == "") {
       setCheckLastname(true);
-    } else if (state.email == '') {
-      // validation = false;
+    } else if (state.email == "") {
       setCheckEmail(true);
-    } else if (password == '') {
-      // validation = false;
+    } else if (password == "") {
       setCheckPassword(true);
-    }
-    // else if (confirmPassword == '') {
-    //   // validation = false;
-    //   setCheckConfirmPassword(true);
-    // }
-    else if (phone == '') {
-      // validation = false;
+    } else if (phone == "") {
       setCheckPhone(true);
-    } else if (address == '') {
-      // validation = false;
+    } else if (address == "") {
       setCheckAddress(true);
-    } else if (country == '') {
-      // validation = false;
+    } else if (country == "") {
       setCheckCountry(true);
-    } else if (dob == '') {
-      // validation = false;
+    } else if (dob == "") {
       setCheckDob(true);
-    } else if (role == '') {
-      // validation = false;
+    } else if (role == "") {
       setCheckRole(true);
     } else if (String(first_name).length <= 2) {
-      // validation = false;
-      alert('firstname must be atleast 3 characters');
+      alert("firstname must be atleast 3 characters");
     } else if (String(last_name).length <= 2) {
-      // validation = false;
-      alert('lastname must be atleast 3 characters');
+      alert("lastname must be atleast 3 characters");
     } else if (!validateEmail()) {
-      // validation = false;
-      alert('Please enter a proper email');
+      alert("Please enter a proper email");
     } else if (String(password).length <= 7) {
-      // validation = false;
-      alert('Password must be between 8 to 16 characters');
+      alert("Password must be between 8 to 16 characters");
     } else if (String(phone).length <= 10) {
-      // validation = false;
-      alert('Phone number must be 11 digits');
+      alert("Phone number must be 11 digits");
     } else if (String(address).length <= 5) {
-      // validation = false;
-      alert('Address must be atleast 6 characters');
+      alert("Address must be atleast 6 characters");
     } else {
-      // getCoachDetails();
       navigateToNextScreen();
     }
   };
@@ -189,79 +159,29 @@ const SplashScreen = props => {
       country: country,
       role: role,
     };
-    props.navigation.navigate('CompleteProfile', data);
+    props.navigation.navigate("CompleteProfile", data);
+    console.log("data is ", data);
   };
 
-  // const getCoachDetails = async () => {
-  //   console.log('first name is', first_name);
-  //   let data = {
-  //     firstName: first_name,
-  //     lastName: last_name,
-  //     email: state.email,
-  //     password: password,
-  //     phone: phone,
-  //     address: address,
-  //     dob: dob,
-  //     country: country,
-  //     role: role,
-  //   };
-
-  //   console.log('data =', data);
-  //   let response;
-  //   await coachRegister(data)
-  //     .then(response => {
-  //       // if (response == 200) {
-  //       //   alert('Success', response);
-  //       //   props.navigation.navigate('CompleteProfile');
-  //       // }
-  //       console.log('response', response);
-  //     })
-  //     .catch(err => {
-  //       // alert('this is error', err);
-  //       console.log('error', err);
-  //     });
-  //   console.log('response =', response);
-
-  //   // try {
-  //   //   let response = await coachRegister(data);
-  //   //   if (response == 200) {
-  //   //     props.navigation.navigate('LoginScreen');
-  //   //   }
-  //   // } catch (error) {
-  //   //   alert('this is error', error);
-  //   //   console.log('error', error);
-  //   // }
-  // };
-
-  //   if (response == 200) {
-  //     alert('Success', response);
-  //     props.navigation.navigate('CompleteProfile');
-  //   }
-  // } catch (error) {
-  //   alert('this is error', error);
-  //   console.log('error', error.msg);
-  // }
-
-  const didShow = height => {
+  const didShow = (height) => {
     // console.log('Keyboard show. Height is ' + height);
     setViewHeight(screenHeight - height);
   };
 
   const didHide = () => {
-    console.log('Keyboard hide');
+    // console.log('Keyboard hide');
     setViewHeight(screenHeight);
   };
   const [keyboardHeigth] = useKeyboard(
     didShow,
-    didHide,
+    didHide
   ); /* initialize the hook (optional parameters) */
 
   const [viewHeight, setViewHeight] = useState(
-    screenHeight,
+    screenHeight
   ); /* for example with didShow and didHide */
 
   useEffect(() => {
-    console.log(keyboardHeigth);
     keyheight = keyboardHeigth;
   }, [keyboardHeigth]);
 
@@ -275,21 +195,21 @@ const SplashScreen = props => {
       <StatusBar
         barStyle="dark-content"
         translucent
-        backgroundColor={'transparent'}
+        backgroundColor={"transparent"}
       />
       <Image
-        source={require('../../assets/coacherlogo.png')}
+        source={require("../../assets/coacherlogo.png")}
         style={[
           styles.logo,
           {
             marginTop:
               keyboardHeigth != 0
                 ? screenHeight > 667
-                  ? '-20%'
-                  : '-30%'
+                  ? "-20%"
+                  : "-30%"
                 : screenHeight > 667
-                ? '20%'
-                : '15%',
+                ? "20%"
+                : "15%",
           },
         ]}
       />
@@ -303,8 +223,9 @@ const SplashScreen = props => {
             borderTopRightRadius: 30,
             height: 70,
             borderWidth: 0,
-            borderBottomColor: 'white',
-          }}>
+            borderBottomColor: "white",
+          }}
+        >
           <Tab
             heading="Login"
             tabStyle={[
@@ -313,18 +234,19 @@ const SplashScreen = props => {
                 borderTopLeftRadius: 30,
               },
             ]}
-            activeTabStyle={[styles.activeTab, {borderTopLeftRadius: 30}]}
+            activeTabStyle={[styles.activeTab, { borderTopLeftRadius: 30 }]}
             textStyle={styles.tabText}
-            activeTextStyle={styles.activeTabText}>
+            activeTextStyle={styles.activeTabText}
+          >
             {/* <ScrollView showsVerticalScrollIndicator={false}> */}
-            <View style={{height: 380}}>
-              <Input text={'Email-Address'} />
-              <Input secureTextEntry={true} text={'Password'} />
-              <View style={{paddingHorizontal: 20}}>
+            <View style={{ height: 380 }}>
+              <Input text={"Email-Address"} />
+              <Input secureTextEntry={true} text={"Password"} />
+              <View style={{ paddingHorizontal: 20 }}>
                 <Button
-                  text={'Login'}
+                  text={"Login"}
                   onPress={() => {
-                    props.navigation.navigate('TabContainer');
+                    props.navigation.navigate("TabContainer");
                   }}
                 />
               </View>
@@ -333,21 +255,23 @@ const SplashScreen = props => {
           </Tab>
           <Tab
             heading="Register"
-            tabStyle={[styles.tab, {borderTopRightRadius: 30}]}
-            activeTabStyle={[styles.activeTab, {borderTopRightRadius: 30}]}
+            tabStyle={[styles.tab, { borderTopRightRadius: 30 }]}
+            activeTabStyle={[styles.activeTab, { borderTopRightRadius: 30 }]}
             textStyle={styles.tabText}
-            activeTextStyle={styles.activeTabText}>
+            activeTextStyle={styles.activeTabText}
+          >
             <ScrollView
               contentContainerStyle={{
-                paddingBottom: screenHeight > 667 ? '190%' : '15%',
+                paddingBottom: screenHeight > 667 ? "190%" : "15%",
               }}
-              showsVerticalScrollIndicator={false}>
-              <View style={{height: 610}}>
+              showsVerticalScrollIndicator={false}
+            >
+              <View style={{ height: 610 }}>
                 <Input
-                  text={'First Name'}
+                  text={"First Name"}
                   value={first_name}
-                  onChangeText={value => {
-                    _onHandleChange('first_name', value);
+                  onChangeText={(value) => {
+                    _onHandleChange("first_name", value);
                     setCheckFirstname(false);
                   }}
                 />
@@ -357,10 +281,10 @@ const SplashScreen = props => {
                   </Text>
                 )}
                 <Input
-                  text={'Last Name'}
+                  text={"Last Name"}
                   value={last_name}
-                  onChangeText={value => {
-                    _onHandleChange('last_name', value);
+                  onChangeText={(value) => {
+                    _onHandleChange("last_name", value);
                     setCheckLastname(false);
                   }}
                 />
@@ -370,10 +294,10 @@ const SplashScreen = props => {
                   </Text>
                 )}
                 <Input
-                  text={'Email-Address'}
+                  text={"Email-Address"}
                   value={state.email}
-                  onChangeText={value => {
-                    _onHandleChange('email', value);
+                  onChangeText={(value) => {
+                    _onHandleChange("email", value);
                     setCheckEmail(false);
                   }}
                 />
@@ -382,10 +306,10 @@ const SplashScreen = props => {
                 )}
                 <Input
                   secureTextEntry={true}
-                  text={'Password'}
+                  text={"Password"}
                   value={password}
-                  onChangeText={value => {
-                    _onHandleChange('password', value);
+                  onChangeText={(value) => {
+                    _onHandleChange("password", value);
                     setCheckPassword(false);
                   }}
                 />
@@ -395,11 +319,11 @@ const SplashScreen = props => {
                   </Text>
                 )}
                 <Input
-                  text={'Phone No.'}
+                  text={"Phone No."}
                   keyboardType="phone-pad"
                   value={phone}
-                  onChangeText={value => {
-                    _onHandleChange('phone', value);
+                  onChangeText={(value) => {
+                    _onHandleChange("phone", value);
                     setCheckPhone(false);
                   }}
                 />
@@ -409,10 +333,10 @@ const SplashScreen = props => {
                   </Text>
                 )}
                 <Input
-                  text={'Address'}
+                  text={"Address"}
                   value={address}
-                  onChangeText={value => {
-                    _onHandleChange('address', value);
+                  onChangeText={(value) => {
+                    _onHandleChange("address", value);
                     setCheckAddress(false);
                   }}
                 />
@@ -421,10 +345,10 @@ const SplashScreen = props => {
                 )}
 
                 <Input
-                  text={'Country'}
+                  text={"Country"}
                   value={country}
-                  onChangeText={value => {
-                    _onHandleChange('country', value);
+                  onChangeText={(value) => {
+                    _onHandleChange("country", value);
                     setCheckCountry(false);
                   }}
                 />
@@ -435,14 +359,14 @@ const SplashScreen = props => {
                   <Text style={styles.dateTimeText}>Date of Birth</Text>
                   <TextInputMask
                     placeholder="DD/MM/YYYY"
-                    type={'datetime'}
+                    type={"datetime"}
                     style={styles.dateTimeStyle}
                     options={{
-                      format: 'DD/MM/YYYY',
+                      format: "YYYY-MM-DD",
                     }}
                     value={dob}
-                    onChangeText={value => {
-                      _onHandleChange('dob', value);
+                    onChangeText={(value) => {
+                      _onHandleChange("dob", value);
                     }}
                   />
                 </View>
@@ -452,10 +376,10 @@ const SplashScreen = props => {
                   </Text>
                 )}
                 <Input
-                  text={'Role'}
+                  text={"Role"}
                   value={role}
-                  onChangeText={value => {
-                    _onHandleChange('role', value);
+                  onChangeText={(value) => {
+                    _onHandleChange("role", value);
                     setCheckRole(false);
                   }}
                 />
@@ -463,18 +387,18 @@ const SplashScreen = props => {
                   <Text style={styles.errorStyle}>Role cannot be empty</Text>
                 )}
 
-                <View style={{paddingHorizontal: 20}}>
+                <View style={{ paddingHorizontal: 20 }}>
                   <Button
-                    text={'Next'}
-                    onPress={() => props.navigation.navigate('CompleteProfile')}
-                    // onPress={() => checkNetwork()}
+                    text={"Next"}
+                    // onPress={() => props.navigation.navigate("CompleteProfile")}
+                    onPress={() => checkNetwork()}
                   />
                 </View>
-                <Text style={[styles.text, {textAlign: 'center'}]}>
+                <Text style={[styles.text, { textAlign: "center" }]}>
                   By signing up, you agree to ECHO's Terms of Use & Privacy
                   Policy
                 </Text>
-                <View style={{marginBottom: 150}}></View>
+                <View style={{ marginBottom: 150 }}></View>
               </View>
             </ScrollView>
           </Tab>
@@ -497,34 +421,34 @@ const styles = StyleSheet.create({
   },
   tabText: {
     fontSize: 14,
-    fontWeight: '400',
+    fontWeight: "400",
     color: Colors.textColor,
     fontFamily: FontFamily.helveticaBold,
   },
   tabUnderline: {
-    borderBottomColor: Platform.OS == 'android' ? '#030E2D' : '#fff',
+    borderBottomColor: Platform.OS == "android" ? "#030E2D" : "#fff",
     borderBottomWidth: 2,
   },
   activeTabText: {
     fontSize: 15,
-    fontWeight: '400',
-    color: 'black',
+    fontWeight: "400",
+    color: "black",
     fontFamily: FontFamily.helveticaBold,
   },
   activeTab: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   image: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
   logo: {
     height: 100,
     width: 100,
-    alignSelf: 'center',
-    marginTop: '23%',
-    marginBottom: '10%',
+    alignSelf: "center",
+    marginTop: "23%",
+    marginBottom: "10%",
   },
   text: {
     fontSize: 11,
@@ -534,15 +458,15 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   bottom: {
-    height: '100%',
-    width: '100%',
+    height: "100%",
+    width: "100%",
     backgroundColor: Colors.whiteColor,
     borderTopRightRadius: 35,
     borderTopLeftRadius: 35,
   },
   errorStyle: {
     fontSize: 12,
-    color: 'red',
+    color: "red",
     paddingLeft: 20,
   },
   dateTimeContainer: {
@@ -552,7 +476,7 @@ const styles = StyleSheet.create({
   dateTimeStyle: {
     height: screenHeight > 667 ? 50 : 40,
     borderWidth: 1,
-    borderColor: '#e0dede',
+    borderColor: "#e0dede",
     borderRadius: 10,
     backgroundColor: Colors.whiteColor,
     color: Colors.blackColor,

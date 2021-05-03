@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -12,89 +12,86 @@ import {
   Dimensions,
   TouchableOpacity,
   FlatList,
-} from 'react-native';
-import {FontFamily} from '../style/typograpy';
-import {Colors} from '../style/colors';
-import Modal from 'react-native-modal';
-import {RadioButton, Checkbox} from 'react-native-paper';
-const height = Dimensions.get('window').height;
-
+} from "react-native";
+import { FontFamily } from "../style/typograpy";
+import { Colors } from "../style/colors";
+import Modal from "react-native-modal";
+import { RadioButton, Checkbox } from "react-native-paper";
+import { ActivityIndicator } from "react-native";
+const height = Dimensions.get("window").height;
 const InstructorTypeModal = ({
   modalVisible,
   setModalVisible,
   navigation,
   setInstructorType,
+  selectedItem,
+  isLoaderActive,
 }) => {
-  const [arr, setArr] = useState([
-    {
-      flag: true,
-      type: 'Cricket',
-    },
-    {
-      flag: false,
-      type: 'Football',
-    },
-    {
-      flag: false,
-      type: 'Baseball',
-    },
-    {
-      flag: false,
-      type: 'Basketball',
-    },
-    {
-      flag: false,
-      type: 'Hockey',
-    },
-    {
-      flag: false,
-      type: 'Rugby',
-    },
-  ]);
+  var [dataArray, setDataArray] = useState([]);
+
+  const [state, setState] = useState();
+
+  useEffect(() => {
+    setDataArray(setInstructorType);
+  });
+
+  const checkBoxFunc = (iteration, item) => {
+    for (let index = 0; index < dataArray.length; index++) {
+      dataArray[index].isDeleted = false;
+    }
+    dataArray[iteration].isDeleted = true;
+    setDataArray(dataArray);
+    setModalVisible(false);
+    selectedItem(item);
+  };
+
   const [prev, setPrev] = useState(0);
   return (
     <Modal
       style={styles.modal}
-      width={'90%'}
+      width={"90%"}
       isVisible={modalVisible}
       hasBackdrop={true}
       backdropColor={Colors.modalOverly}
       backdropOpacity={0.5}
-      swipeDirection={['up']}
-      animationIn={'slideInUp'}
-      animationOut={'slideOutDown'}>
+      swipeDirection={["up"]}
+      animationIn={"slideInUp"}
+      animationOut={"slideOutDown"}
+    >
       <View style={styles.container}>
-        <FlatList
-          data={arr}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({item, index}) => {
-            return (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  marginTop: 10,
-                }}>
-                <RadioButton
-                  color={Colors.blackColor}
-                  size={10}
-                  uncheckedColor={Colors.blackColor}
-                  status={item.flag ? 'checked' : 'unchecked'}
-                  onPress={() => {
-                    let array = arr;
-                    array[prev].flag = false;
-                    array[index].flag = true;
-                    setArr(arr);
-                    setInstructorType(item.type);
-                    setModalVisible(false);
-                    setPrev(index);
+        {isLoaderActive == true ? (
+          <View style={{ justifyContent: "center", alignItems: "center" }}>
+            <ActivityIndicator
+              size="large"
+              color={Colors.blackColor}
+              animating
+            />
+          </View>
+        ) : (
+          <FlatList
+            data={dataArray}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item, index }) => {
+              return (
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    marginTop: 10,
                   }}
-                />
-                <Text style={styles.text}>{item.type}</Text>
-              </View>
-            );
-          }}
-        />
+                >
+                  <RadioButton
+                    color={Colors.blackColor}
+                    size={10}
+                    uncheckedColor={Colors.blackColor}
+                    onPress={() => checkBoxFunc(index, item)}
+                  />
+                  <Text style={styles.text}>{item.title}</Text>
+                </View>
+              );
+            }}
+          />
+        )}
       </View>
     </Modal>
   );
@@ -105,13 +102,14 @@ const styles = StyleSheet.create({
     height: (height * 45) / 100,
   },
   container: {
-    width: '100%',
+    width: "100%",
     backgroundColor: Colors.whiteColor,
-    height: height > 667 ? (height * 45) / 100 : (height * 55) / 100,
+    height: (height * 30) / 100,
     borderRadius: 20,
     paddingHorizontal: 20,
     paddingVertical: 10,
-    // justifyContent: 'center',
+    justifyContent: "center",
+    // alignItems: 'center',
   },
   image: {
     height: 30,
@@ -128,8 +126,8 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginTop: 10,
     color: Colors.blackColor,
-    width: '95%',
-    textAlign: 'center',
+    width: "95%",
+    textAlign: "center",
   },
 });
 
