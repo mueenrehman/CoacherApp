@@ -8,7 +8,6 @@ import {
   StatusBar,
   ImageBackground,
   Image,
-  AsyncStorage,
   NativeModules,
   Platform,
   Dimensions,
@@ -22,11 +21,17 @@ import Input from "../../common/Input";
 import { FontFamily } from "../../style/typograpy";
 import Button from "../../common/Button";
 import { useKeyboard } from "./../index";
+import { Link } from "@react-navigation/native";
 
 import { TextInputMask } from "react-native-masked-text";
 
 import NetInfo from "@react-native-community/netinfo";
 import { coachRegister } from "../../../services/registerCoach";
+import * as userLoginService from "../../../services/LoginUser";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { logindatakey } from "../../helper/globalKey";
+import GlobalVariables from "../../helper/GlobalVariables";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -37,9 +42,11 @@ const SplashScreen = (props) => {
     email: "",
   });
 
+  const [loginEmail, setLoginEmail] = useState("");
   const [first_name, setFirstname] = useState("");
   const [last_name, setLastname] = useState("");
   const [password, setPassword] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
@@ -50,13 +57,73 @@ const SplashScreen = (props) => {
   const [checkFirst_name, setCheckFirstname] = useState(false);
   const [checkLast_name, setCheckLastname] = useState(false);
   const [checkEmail, setCheckEmail] = useState(false);
+  const [checkLoginEmail, setCheckLoginEmail] = useState(false);
   const [checkPassword, setCheckPassword] = useState(false);
+  const [checkLoginPassword, setCheckLoginPassword] = useState(false);
   const [checkConfirmPassword, setCheckConfirmPassword] = useState(false);
   const [checkPhone, setCheckPhone] = useState(false);
   const [checkAddress, setCheckAddress] = useState(false);
   const [checkDob, setCheckDob] = useState(false);
   const [checkCountry, setCheckCountry] = useState(false);
   const [checkRole, setCheckRole] = useState(false);
+
+  const onHandleLoginInputs = (name, value) => {
+    if (name == "loginEmail") {
+      setCheckLoginEmail(false);
+      setLoginEmail(value);
+    } else if (name == "loginPassword") {
+      setCheckLoginPassword(false);
+      setLoginPassword(value);
+    }
+  };
+
+  const loginValidations = () => {
+    if (loginEmail == "") {
+      setCheckLoginEmail(true);
+    } else if (loginPassword == "") {
+      setCheckLoginPassword(true);
+    } else {
+      loginService();
+    }
+  };
+
+  const loginService = async () => {
+    let loginDetails = JSON.stringify({
+      email: loginEmail,
+      password: loginPassword,
+    });
+    // console.log("userdata is", loginDetails);
+
+    try {
+      let response = await userLoginService.userLoginFunc(loginDetails);
+      if (response.status == 200) {
+        GlobalVariables.userDetails = response.data.userData.userInfo;
+        GlobalVariables.authenticationToken = response.data.userData.tokenInfo;
+        storeData(response);
+      } else {
+        console.log("error in service");
+      }
+    } catch (error) {
+      alert("Invalid email or password");
+      console.log(error);
+    }
+  };
+
+  const storeData = async (value) => {
+    try {
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem("logindatakey", jsonValue);
+      // console.log("json Value is", jsonValue);
+      // setTimeout(() => {
+      //   setIsLoading(false);
+      // }, 1000);
+      // setTimeout(() => {
+      props.navigation.navigate("TabContainer");
+      // }, 1000);
+    } catch (e) {
+      // saving error
+    }
+  };
 
   _onHandleChange = (name, value) => {
     if (name == "first_name") {
@@ -239,17 +306,43 @@ const SplashScreen = (props) => {
             activeTextStyle={styles.activeTabText}
           >
             {/* <ScrollView showsVerticalScrollIndicator={false}> */}
-            <View style={{ height: 380 }}>
-              <Input text={"Email-Address"} />
-              <Input secureTextEntry={true} text={"Password"} />
+            <View style={{ height: "70%" }}>
+              <Input
+                text={"Email-Address"}
+                value={loginEmail}
+                onChangeText={(value) => {
+                  onHandleLoginInputs("loginEmail", value);
+                  setCheckLoginEmail(false);
+                }}
+              />
+              {checkLoginEmail == true && (
+                <Text style={styles.errorStyle}>Email cannot be empty</Text>
+              )}
+              <Input
+                text={"Password"}
+                secureTextEntry={true}
+                value={loginPassword}
+                onChangeText={(value) => {
+                  onHandleLoginInputs("loginPassword", value);
+                  setCheckLoginPassword(false);
+                }}
+              />
+              {checkLoginPassword == true && (
+                <Text style={styles.errorStyle}>Password cannot be empty</Text>
+              )}
+
               <View style={{ paddingHorizontal: 20 }}>
                 <Button
                   text={"Login"}
                   onPress={() => {
-                    props.navigation.navigate("TabContainer");
+                    loginValidations();
+                    // props.navigation.navigate("EmailSent");
                   }}
                 />
               </View>
+              <Link style={styles.linkText} to="/ForgotPassword">
+                Forgot your password?
+              </Link>
             </View>
             {/* </ScrollView> */}
           </Tab>
@@ -358,7 +451,7 @@ const SplashScreen = (props) => {
                 <View style={styles.dateTimeContainer}>
                   <Text style={styles.dateTimeText}>Date of Birth</Text>
                   <TextInputMask
-                    placeholder="DD/MM/YYYY"
+                    placeholder="YYYY-MM-DD"
                     type={"datetime"}
                     style={styles.dateTimeStyle}
                     options={{
@@ -489,6 +582,11 @@ const styles = StyleSheet.create({
     color: Colors.textColor,
     fontSize: 13,
     marginBottom: 12,
+  },
+  linkText: {
+    color: "orange",
+    marginTop: "5%",
+    textAlign: "center",
   },
 });
 

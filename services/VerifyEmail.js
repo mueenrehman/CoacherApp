@@ -1,8 +1,10 @@
 import axios from "axios";
-import { VERIFY_EMAIL } from "./API_URLs/urls";
+import { VERIFY_OTP } from "./API_URLs/urls";
 
-export const verifyAccount = (data) => {
-  const url = VERIFY_EMAIL;
+export const verificationEmail = (data) => {
+  const url = VERIFY_OTP;
 
-  return axios.post(url, data);
+  return axios.post(url, data, {
+    headers: { "Content-Type": "application/json" },
+  });
 };

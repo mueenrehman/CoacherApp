@@ -35,7 +35,7 @@ import { fetchSkills } from "../../../services/FetchSkills";
 // import {Checkbox} from '../../common/Checkbox';
 
 import NetInfo from "@react-native-community/netinfo";
-import { coachRegister } from "../../../services/registerCoach";
+import * as coachRegister from "../../../services/registerCoach";
 import { debug } from "react-native-reanimated";
 
 const height = Dimensions.get("window").height;
@@ -205,7 +205,7 @@ function CompleteProfile({ navigation, route }) {
     console.log("userdata is", userData);
 
     try {
-      let response = await coachRegister(userData);
+      let response = await coachRegister.coachRegisterService(userData);
       if (response.data.success != undefined && response.data.success == true) {
         console.log("response", response);
         navigation.navigate("EmailSent");
